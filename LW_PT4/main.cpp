@@ -1,7 +1,10 @@
 #include <iostream>
 #include <random>
 #include <cstring>
-
+//#include "Stack.h"
+//#include "Stack.cpp"
+//#include "StackElem.h"
+//#include "StackElem.cpp"
 using namespace std;
 
 /*
@@ -15,15 +18,73 @@ using namespace std;
 оператор присваивания =, оператор += для добавления в стек, оператор – для извлечения из стека.
 */
 
+template <typename sv>
+class stackElem
+{
+private:
+	sv val;
+public:
+	stackElem<sv>* down;
+	stackElem(void);
+	~stackElem(void);
+	sv getval(void);
+	void setval(sv v);
+};
+
+template <typename sv> class stack;
+
+
+
+template <typename sv>
+class stack
+{
+private:
+	stackElem<sv>* top;
+	int size;
+public:
+	explicit stack(void);
+	~stack(void);
+	int getsize(void);
+	stack<sv>& operator=(stack<sv>& r);
+	sv operator-();
+	sv operator+=(sv r);
+	friend ostream& operator<<(ostream& o, stack<sv>& st)
+	{
+		stackElem<sv>* ptr = st.top;
+		while (ptr)
+		{
+			o << ptr->getval() << endl;
+			ptr = ptr->down;
+		}
+		return o;
+	}
+	friend istream& operator>>(istream& i, stack<sv>& st)
+	{
+		double val;
+		stackElem<sv>* ptr = st.top;
+		while (ptr)
+		{
+			i >> val;
+			ptr->setval(val);
+			ptr=ptr->down;
+		}
+		return i;
+	}
+};
+
 template <typename v>
 double getaverage(v*, int size);
 
 template <typename v>
 double getaverage(v**, int size);
 
+template <typename sv>
+ostream& operator<<(ostream& o, stack<sv>& st);
 
 void avProc(void);
-//void stProc(void);
+template<typename stType>
+void stProc(void);
+void stFab(void);
 int main(void)
 {
 	int sw;
@@ -40,7 +101,7 @@ int main(void)
 			avProc();
 			break;
 		case 2:
-			//stProc();
+			stFab();
 			break;
 		default:
 			cout << "Uncorrect mode. Try again:" << endl;
@@ -303,6 +364,138 @@ void avProc(void)
 	}
 }
 
+void stFab(void)
+{
+	int sw = 0;
+	cout << "Enter type of stack: 0: exit, 1: char, 2: int, 3: float, 4: double;" << endl;
+	cin >> sw;
+	cout << endl;
+	while (sw)
+	{
+
+		switch (sw)
+		{
+		case 1:
+			stProc<char>();
+			cout << endl;
+			break;
+		case 2:
+			stProc<int>();
+			cout << endl;
+			break;
+		case 3:
+			stProc<float>();
+			break;
+		case 4:
+			stProc<double>();
+			break;
+		default:
+			cout << "Uncorrect mode. Try again:" << endl;
+		}
+		cout << "Enter type of stack: 0: exit, 1: char, 2: int, 3: float, 4: double;" << endl;
+		cin >> sw;
+		cout << endl;
+	}
+}
+
+template<typename stType>
+void stProc()
+{
+	//РАЗОБРАТЬСЯ С БУФЕРНЫМ ВВОДОМ ТИПА char, СТРОКИ
+	stack<stType> st1;
+	stack<stType> st2;
+	int sw = 1;
+	stType v = 0;
+	cout << "Enter type of stack processing: 0: exit, 1: cin>>stack1, 2: cin>>stack2, 3: cout<<stack1, 4: cout<<stack2, 5: stack1+=val, 6: stack2+=val, 7: -stack1, 8: -stack2, 9: stack1 = stack2;" << endl;
+	cin >> sw;
+	cout << endl;
+	while (sw)
+	{
+		
+		switch (sw)
+		{
+		case 1:
+			cout << "Enter new values into the stack step by step:" << endl;
+			cin >> st1;
+			//cout << endl;
+			/*try {
+				if (!size)
+				{
+					throw 10;
+				}
+			}
+			catch (...)
+			{
+				cout << "Size is null." << endl;
+				exit(0);
+			}*/
+
+			cout << endl;
+			break;
+		case 2:
+			cout << "Enter new values into the stack step by step:" << endl;
+			cin >> st2;
+			cout << endl;
+			break;
+		case 3:
+			cout << "Stack1 contents:" << endl;
+			cout << st1 << endl;
+			break;
+		case 4:
+			cout << "Stack2 contents:" << endl;
+			cout << st2 << endl;
+			break;
+		case 5:
+			cout << "Enter new element of stack1" << endl;
+			cin >> v;
+			st1 += v;
+			cout << endl;
+			break;
+		case 6:
+			cout << "Enter new element of stack2" << endl;
+			cin >> v;
+			st2 += v;
+			cout << endl;
+			break;
+		case 7:
+			cout << "Stack1 before:" << endl;
+			cout << st1;
+			cout << endl;
+			cout << "Deleting element: " << -st1 << endl;
+			cout << endl;
+			cout << "Stack1 after:" << endl;
+			cout << st1;
+			cout << endl;
+			break;
+		case 8:
+			cout << "Stack2 before:" << endl;
+			cout << st2;
+			cout << endl;
+			cout << "Deleting element: " << -st2 << endl;
+			cout << endl;
+			cout << "Stack2 after:" << endl;
+			cout << st2;
+			cout << endl;
+			break;
+		case 9:
+			cout << "Stack1:" << endl;
+			cout << st1;
+			cout << "Stack2:" << endl;
+			cout << st2;
+			cout << "Stack2 = stack1:" << endl;
+			st2 = st1;
+			cout << st2;
+			cout << endl;
+			break;
+		default:
+			cout << "Uncorrect mode. Try again:" << endl;
+		}
+		cout << "Enter type of stack processing: 0: exit, 1: cin>>stack1, 2: cin>>stack2, 3: cout<<stack1, 4: cout<<stack2, 5: stack1+=val, 6: stack2+=val, 7: -stack1, 8: -stack2, 9: stack1 = stack2;" << endl;
+		cin >> sw;
+		cout << endl;
+	}
+}
+
 template <typename v>
 double getaverage(v* arr, int size)
 {
@@ -324,3 +517,109 @@ double getaverage(v** arr, int size)
 	}
 	return sum / size;
 }
+
+template <typename sv>
+stackElem<sv>::stackElem(void)
+{
+	val = 0;
+	down = nullptr;
+}
+template <typename sv>
+stackElem<sv>::~stackElem(void)
+{}
+template <typename sv>
+sv stackElem<sv>::getval(void)
+{
+	return val;
+}
+template <typename sv>
+void stackElem<sv>::setval(sv v)
+{
+	val = v;
+}
+template <typename sv>
+stack<sv>::stack(void)
+{
+	top = 0;
+	size = 0;
+}
+template <typename sv>
+stack<sv>::~stack(void)
+{
+	stackElem<sv>* temp = top;
+	while (top) 
+	{
+		temp = top;
+		top = top->down;
+		delete temp;
+	}
+	
+}
+template <typename sv>
+int stack<sv>::getsize(void)
+{
+	return size;
+}
+template <typename sv>
+stack<sv>& stack<sv>::operator=(stack<sv>& r)
+{
+	if (this == &r)
+	{
+		return *this;
+	}
+	stackElem<sv>* ptr1 = top;
+	stackElem<sv>* ptr2;
+	while (size--)
+	{
+		ptr1 = top;
+		top = top->down;
+		delete ptr1;
+	}
+	int l = r.getsize();
+	ptr2 = r.top;
+	
+	while (l--)
+	{
+		if (!top)
+		{
+			top = new stackElem<sv>;
+			ptr1 = top;
+		}
+		ptr1->setval(ptr2->getval());
+		ptr1->down = new stackElem<sv>;
+		ptr1 = ptr1->down;
+		ptr2 = ptr2->down;
+	}
+	if (ptr1)
+	{
+		ptr1->down = nullptr;
+	}
+	return *this;
+}
+template <typename sv>
+sv stack<sv>::operator-()
+{
+	if (!top)
+	{
+		return 0;
+	}
+	sv v = top->getval();
+	stackElem<sv>* temp = top;
+	top = top->down;
+	delete temp;
+	size--;
+	return v;
+}
+template <typename sv>
+sv stack<sv>::operator+=(sv r)
+{
+	stackElem<sv>* temp = new stackElem<sv>;
+	temp->down = top;
+	temp->setval(r);
+	top = temp;
+	size++;
+	return r;
+}
+/*template <typename sv>
+ostream &operator<<(ostream& o, stack<sv>& st)*/
+
