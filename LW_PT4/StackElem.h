@@ -6,7 +6,7 @@ class stackElem
 private:
 	sv val;
 public:
-	stackElem* down;
+	stackElem<sv>* down;
 	stackElem(void);
 	~stackElem(void);
 	sv getval(void);

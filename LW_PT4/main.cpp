@@ -1,10 +1,12 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <random>
 #include <cstring>
+
 //#include "Stack.h"
 //#include "Stack.cpp"
-//#include "StackElem.h"
-//#include "StackElem.cpp"
+#include "StackElem.h"
+#include "StackElem.cpp"
 using namespace std;
 
 /*
@@ -17,23 +19,6 @@ using namespace std;
 Создать параметризованный стек с перегруженными операторами потокового ввода/вывода,
 оператор присваивания =, оператор += для добавления в стек, оператор – для извлечения из стека.
 */
-
-template <typename sv>
-class stackElem
-{
-private:
-	sv val;
-public:
-	stackElem<sv>* down;
-	stackElem(void);
-	~stackElem(void);
-	sv getval(void);
-	void setval(sv v);
-};
-
-template <typename sv> class stack;
-
-
 
 template <typename sv>
 class stack
@@ -60,13 +45,134 @@ public:
 	}
 	friend istream& operator>>(istream& i, stack<sv>& st)
 	{
-		double val;
+		sv val = 0;
 		stackElem<sv>* ptr = st.top;
 		while (ptr)
 		{
 			i >> val;
 			ptr->setval(val);
-			ptr=ptr->down;
+			ptr = ptr->down;
+		}
+		return i;
+	}
+};
+
+template<>
+class stack<char*>
+{
+private:
+	stackElem<char*>* top;
+	int size;
+public:
+	explicit stack(void)
+	{
+		top = 0;
+		size = 0;
+	}
+	~stack(void)
+	{
+		stackElem<char*>* temp = top;
+		while (top)
+		{
+			temp = top;
+			top = top->down;
+			delete temp->getval();
+			delete temp;
+		}
+
+	}
+	int getsize(void)
+	{
+		return size;
+	}
+	stack<char*>& operator=(stack<char*>& r)
+	{
+		if (this == &r)
+		{
+			return *this;
+		}
+		stackElem<char*>* ptr1 = top;
+		stackElem<char*>* ptr2;
+		char* p = nullptr;
+		while (size--)
+		{
+			ptr1 = top;
+			top = top->down;
+			delete ptr1->getval();
+			delete ptr1;
+		}
+		int l = r.getsize();
+		ptr2 = r.top;
+
+		while (l--)
+		{
+			if (!top)
+			{
+				top = new stackElem<char*>;
+				ptr1 = top;
+			}
+			p = new char[20];
+			strcpy(p, ptr2->getval());
+			ptr1->setval(p);
+			if (l)
+			{
+				ptr1->down = new stackElem<char*>;
+			}
+			ptr1 = ptr1->down;
+			ptr2 = ptr2->down;
+			size++;
+		}
+		if (ptr1)
+		{
+			ptr1->down = nullptr;
+		}
+		return *this;
+	}
+	char* operator-()
+	{
+		if (!top)
+		{
+			return 0;
+		}
+		char* v = top->getval();
+		stackElem<char*>* temp = top;
+		top = top->down;
+		delete temp->getval();
+		delete temp;
+		size--;
+		return v;
+	}
+	char* operator+=(char* r)
+	{
+		stackElem<char*>* temp = new stackElem<char*>;
+		temp->down = top;
+		temp->setval(r);
+		top = temp;
+		size++;
+		return r;
+	}
+	friend ostream& operator<<(ostream& o, stack<char*>& st)
+	{
+		stackElem<char*>* ptr = st.top;
+		while (ptr)
+		{
+			o.write(ptr->getval(), strlen(ptr->getval())) << endl;
+			ptr = ptr->down;
+		}
+		return o;
+	}
+	friend istream& operator>>(istream& i, stack<char*>& st)
+	{
+		char* p;
+		stackElem<char*>* ptr = st.top;
+		while (ptr)
+		{
+			p = new char[20];
+			i.ignore();
+			i.getline(p, 20);
+			delete (ptr->getval());
+			ptr->setval(p);
+			ptr = ptr->down;
 		}
 		return i;
 	}
@@ -78,12 +184,113 @@ double getaverage(v*, int size);
 template <typename v>
 double getaverage(v**, int size);
 
-template <typename sv>
-ostream& operator<<(ostream& o, stack<sv>& st);
-
 void avProc(void);
 template<typename stType>
 void stProc(void);
+
+template<>
+void stProc<char*>()
+{
+	stack<char*> st1;
+	stack<char*> st2;
+	int sw = 1;
+	char* v = nullptr;
+	int l;
+	char* p;
+	cout << "Enter type of stack processing: 0: exit, 1: cin>>stack1, 2: cin>>stack2, 3: cout<<stack1, 4: cout<<stack2, 5: stack1+=val, 6: stack2+=val, 7: -stack1, 8: -stack2, 9: stack1 = stack2;" << endl;
+	cin >> sw;
+	cout << endl;
+	while (sw)
+	{
+
+		switch (sw)
+		{
+		case 1:
+			cout << "Enter new values into the stack1 step by step:" << endl;
+			cin >> st1;
+			//cout << endl;
+			/*try {
+				if (!size)
+				{
+					throw 10;
+				}
+			}
+			catch (...)
+			{
+				cout << "Size is null." << endl;
+				exit(0);
+			}*/
+
+			cout << endl;
+			break;
+		case 2:
+			cout << "Enter new values into the stack2 step by step:" << endl;
+			cin >> st2;
+			cout << endl;
+			break;
+		case 3:
+			cout << "Stack1 contents:" << endl;
+			cout << st1 << endl;
+			break;
+		case 4:
+			cout << "Stack2 contents:" << endl;
+			cout << st2 << endl;
+			break;
+		case 5:
+			cout << "Enter new element of stack1";
+			cout << '\n';
+			v = new char[20];
+			cin.ignore();
+			cin.getline(v, 20);
+			st1 += v;
+			cout << endl;
+			break;
+		case 6:
+			cout << "Enter new element of stack2";
+			cout << '\n';
+			v = new char[20];
+			cin.ignore();
+			cin.getline(v, 20);
+			st2 += v;
+			cout << endl;
+			break;
+		case 7:
+			cout << "Stack1 before:" << endl;
+			cout << st1;
+			cout << endl;
+			-st1;
+			cout << "Stack1 after:" << endl;
+			cout << st1;
+			cout << endl;
+			break;
+		case 8:
+			cout << "Stack2 before:" << endl;
+			cout << st2;
+			cout << endl;
+			-st2;
+			cout << "Stack2 after:" << endl;
+			cout << st2;
+			cout << endl;
+			break;
+		case 9:
+			cout << "Stack1:" << endl;
+			cout << st1;
+			cout << "Stack2:" << endl;
+			cout << st2;
+			cout << "Stack2 = stack1:" << endl;
+			st2 = st1;
+			cout << st2;
+			cout << endl;
+			break;
+		default:
+			cout << "Uncorrect mode. Try again:" << endl;
+		}
+		cout << "Enter type of stack processing: 0: exit, 1: cin>>stack1, 2: cin>>stack2, 3: cout<<stack1, 4: cout<<stack2, 5: stack1+=val, 6: stack2+=val, 7: -stack1, 8: -stack2, 9: stack1 = stack2;" << endl;
+		cin >> sw;
+		cout << endl;
+	}
+}
+
 void stFab(void);
 int main(void)
 {
@@ -367,7 +574,7 @@ void avProc(void)
 void stFab(void)
 {
 	int sw = 0;
-	cout << "Enter type of stack: 0: exit, 1: char, 2: int, 3: float, 4: double;" << endl;
+	cout << "Enter type of stack: 0: exit, 1: char, 2: int, 3: float, 4: double, 5: char* (string);" << endl;
 	cin >> sw;
 	cout << endl;
 	while (sw)
@@ -389,10 +596,13 @@ void stFab(void)
 		case 4:
 			stProc<double>();
 			break;
+		case 5:
+			stProc<char*>();
+			break;
 		default:
 			cout << "Uncorrect mode. Try again:" << endl;
 		}
-		cout << "Enter type of stack: 0: exit, 1: char, 2: int, 3: float, 4: double;" << endl;
+		cout << "Enter type of stack: 0: exit, 1: char, 2: int, 3: float, 4: double, 5: char* (string);" << endl;
 		cin >> sw;
 		cout << endl;
 	}
@@ -401,11 +611,12 @@ void stFab(void)
 template<typename stType>
 void stProc()
 {
-	//РАЗОБРАТЬСЯ С БУФЕРНЫМ ВВОДОМ ТИПА char, СТРОКИ
 	stack<stType> st1;
 	stack<stType> st2;
 	int sw = 1;
 	stType v = 0;
+	int l;
+	char* p;
 	cout << "Enter type of stack processing: 0: exit, 1: cin>>stack1, 2: cin>>stack2, 3: cout<<stack1, 4: cout<<stack2, 5: stack1+=val, 6: stack2+=val, 7: -stack1, 8: -stack2, 9: stack1 = stack2;" << endl;
 	cin >> sw;
 	cout << endl;
@@ -415,7 +626,7 @@ void stProc()
 		switch (sw)
 		{
 		case 1:
-			cout << "Enter new values into the stack step by step:" << endl;
+			cout << "Enter new values into the stack1 step by step:" << endl;
 			cin >> st1;
 			//cout << endl;
 			/*try {
@@ -433,7 +644,7 @@ void stProc()
 			cout << endl;
 			break;
 		case 2:
-			cout << "Enter new values into the stack step by step:" << endl;
+			cout << "Enter new values into the stack2 step by step:" << endl;
 			cin >> st2;
 			cout << endl;
 			break;
@@ -447,13 +658,16 @@ void stProc()
 			break;
 		case 5:
 			cout << "Enter new element of stack1" << endl;
-			cin >> v;
+		
+				cin >> v;
+				while (cin.get() != '\n');
 			st1 += v;
 			cout << endl;
 			break;
 		case 6:
 			cout << "Enter new element of stack2" << endl;
 			cin >> v;
+			while (cin.get() != '\n');
 			st2 += v;
 			cout << endl;
 			break;
@@ -496,6 +710,8 @@ void stProc()
 	}
 }
 
+
+
 template <typename v>
 double getaverage(v* arr, int size)
 {
@@ -519,25 +735,6 @@ double getaverage(v** arr, int size)
 }
 
 template <typename sv>
-stackElem<sv>::stackElem(void)
-{
-	val = 0;
-	down = nullptr;
-}
-template <typename sv>
-stackElem<sv>::~stackElem(void)
-{}
-template <typename sv>
-sv stackElem<sv>::getval(void)
-{
-	return val;
-}
-template <typename sv>
-void stackElem<sv>::setval(sv v)
-{
-	val = v;
-}
-template <typename sv>
 stack<sv>::stack(void)
 {
 	top = 0;
@@ -547,13 +744,13 @@ template <typename sv>
 stack<sv>::~stack(void)
 {
 	stackElem<sv>* temp = top;
-	while (top) 
+	while (top)
 	{
 		temp = top;
 		top = top->down;
 		delete temp;
 	}
-	
+
 }
 template <typename sv>
 int stack<sv>::getsize(void)
@@ -577,7 +774,7 @@ stack<sv>& stack<sv>::operator=(stack<sv>& r)
 	}
 	int l = r.getsize();
 	ptr2 = r.top;
-	
+
 	while (l--)
 	{
 		if (!top)
@@ -586,9 +783,13 @@ stack<sv>& stack<sv>::operator=(stack<sv>& r)
 			ptr1 = top;
 		}
 		ptr1->setval(ptr2->getval());
-		ptr1->down = new stackElem<sv>;
+		if (l)
+		{
+			ptr1->down = new stackElem<sv>;
+		}
 		ptr1 = ptr1->down;
 		ptr2 = ptr2->down;
+		size++;
 	}
 	if (ptr1)
 	{
@@ -620,6 +821,6 @@ sv stack<sv>::operator+=(sv r)
 	size++;
 	return r;
 }
-/*template <typename sv>
-ostream &operator<<(ostream& o, stack<sv>& st)*/
+
+
 
