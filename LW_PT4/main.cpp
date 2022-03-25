@@ -193,7 +193,7 @@ int main(void)
 		default:
 			cout << "Uncorrect mode. Try again:" << endl;
 		}
-		cout << "Enter class mode: 0-exit, 1-double digit, 2-stack;" << endl;
+		cout << "Enter task: 0-exit, 1-average, 2-stack;" << endl;
 		try
 		{
 			cin >> sw;
