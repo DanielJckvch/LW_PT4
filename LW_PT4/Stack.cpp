@@ -41,22 +41,32 @@ stack<sv>& stack<sv>::operator=(stack<sv>& r)
 	}
 	int l = r.getsize();
 	ptr2 = r.top;
-
-	while (l--)
-	{
-		if (!top)
+	try {
+		while (l--)
 		{
-			top = new stackElem<sv>;
-			ptr1 = top;
+			if (!top)
+			{
+				top = new stackElem<sv>;
+				ptr1 = top;
+			}
+			ptr1->setval(ptr2->getval());
+			if (l)
+			{
+				ptr1->down = new stackElem<sv>;
+			}
+			ptr1 = ptr1->down;
+			ptr2 = ptr2->down;
+			size++;
 		}
-		ptr1->setval(ptr2->getval());
-		ptr1->down = new stackElem<sv>;
-		ptr1 = ptr1->down;
-		ptr2 = ptr2->down;
+		if (ptr1)
+		{
+			ptr1->down = nullptr;
+		}
 	}
-	if (ptr1)
+	catch (bad_alloc e)
 	{
-		ptr1->down = nullptr;
+		cout << "Error of operator new." << endl;
+		exit(0);
 	}
 	return *this;
 }
@@ -77,11 +87,19 @@ sv stack<sv>::operator-()
 template <typename sv>
 sv stack<sv>::operator+=(sv r)
 {
-	stackElem<sv>* temp = new stackElem<sv>;
-	temp->down = top;
-	temp->setval(r);
-	top = temp;
-	size++;
+	try
+	{
+		stackElem<sv>* temp = new stackElem<sv>;
+		temp->down = top;
+		temp->setval(r);
+		top = temp;
+		size++;
+	}
+	catch (bad_alloc e)
+	{
+		cout << "Error of operator new." << endl;
+		exit(0);
+	}
 	return r;
 }
 /*template <typename sv>
