@@ -37,7 +37,7 @@ void stProc<char*>()
 	char* v = nullptr;
 	int l;
 	char* p;
-	cout << "Enter type of stack processing: 0: exit, 1: cin>>stack1, 2: cin>>stack2, 3: cout<<stack1, 4: cout<<stack2, 5: stack1+=val, 6: stack2+=val, 7: -stack1, 8: -stack2, 9: stack1 = stack2;" << endl;
+	cout << "Enter type of stack processing: 0: exit, 1: cin>>stack1, 2: cin>>stack2, 3: cout<<stack1, 4: cout<<stack2, 5: stack1+=val, 6: stack2+=val, 7: -stack1, 8: -stack2, 9: stack2 = stack1;" << endl;
 	try
 	{
 		cin >> sw;
@@ -139,7 +139,7 @@ void stProc<char*>()
 		default:
 			cout << "Uncorrect mode. Try again:" << endl;
 		}
-		cout << "Enter type of stack processing: 0: exit, 1: cin>>stack1, 2: cin>>stack2, 3: cout<<stack1, 4: cout<<stack2, 5: stack1+=val, 6: stack2+=val, 7: -stack1, 8: -stack2, 9: stack1 = stack2;" << endl;
+		cout << "Enter type of stack processing: 0: exit, 1: cin>>stack1, 2: cin>>stack2, 3: cout<<stack1, 4: cout<<stack2, 5: stack1+=val, 6: stack2+=val, 7: -stack1, 8: -stack2, 9: stack2 = stack1;" << endl;
 		try
 		{
 			cin >> sw;
@@ -553,7 +553,7 @@ void stProc()
 	stack<stType> st2;
 	int sw = 1;
 	stType v = 0;
-	cout << "Enter type of stack processing: 0: exit, 1: cin>>stack1, 2: cin>>stack2, 3: cout<<stack1, 4: cout<<stack2, 5: stack1+=val, 6: stack2+=val, 7: -stack1, 8: -stack2, 9: stack1 = stack2;" << endl;
+	cout << "Enter type of stack processing: 0: exit, 1: cin>>stack1, 2: cin>>stack2, 3: cout<<stack1, 4: cout<<stack2, 5: stack1+=val, 6: stack2+=val, 7: -stack1, 8: -stack2, 9: stack2 = stack1;" << endl;
 	try
 	{
 		cin >> sw;
@@ -660,7 +660,7 @@ void stProc()
 		default:
 			cout << "Uncorrect mode. Try again:" << endl;
 		}
-		cout << "Enter type of stack processing: 0: exit, 1: cin>>stack1, 2: cin>>stack2, 3: cout<<stack1, 4: cout<<stack2, 5: stack1+=val, 6: stack2+=val, 7: -stack1, 8: -stack2, 9: stack1 = stack2;" << endl;
+		cout << "Enter type of stack processing: 0: exit, 1: cin>>stack1, 2: cin>>stack2, 3: cout<<stack1, 4: cout<<stack2, 5: stack1+=val, 6: stack2+=val, 7: -stack1, 8: -stack2, 9: stack2 = stack1;" << endl;
 		try
 		{
 			cin >> sw;

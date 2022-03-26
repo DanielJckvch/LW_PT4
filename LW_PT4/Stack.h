@@ -105,12 +105,13 @@ public:
 		stackElem<char*>* ptr1 = top;
 		stackElem<char*>* ptr2;
 		char* p = nullptr;
-		while (size--)
+		while (size)
 		{
 			ptr1 = top;
 			top = top->down;
 			delete ptr1->getval();
 			delete ptr1;
+			size--;
 		}
 		int l = r.getsize();
 		ptr2 = r.top;
@@ -131,7 +132,7 @@ public:
 				}
 				ptr1 = ptr1->down;
 				ptr2 = ptr2->down;
-				size++;
+				size = size + 1;
 			}
 			if (ptr1)
 			{
